@@ -500,23 +500,29 @@ class Calculation:
         else:
             budget_total = 0
             expense_total = 0
+            budget_count = []
+            expense_count = []
 
             for amounts in data[self.email]["total_budget"].values():
                 amount = amounts['budget']
+                budget_count.append(amounts)
                 budget_total += amount
             for amounts in data[self.email]["total_expenses"].values():
                 amount = amounts['expense']
+                expense_count.append(amounts)
                 expense_total += amount
 
             balance = round(budget_total - expense_total, 2)
 
             print(f"      *************** SUMMARY OF YOUR ACCOUNT ***************")
             print(f"Account Holder: {name}\nAccount Email: {email}")
+            print(f"Budget Entered: {len(budget_count)} Times")
+            print(f"Expense Entered: {len(expense_count)} Times")
             print("-" * 70)
             print("Total_Budget_Amount(Cr.)\tTotal_Expense_Amount(Dr.)\tBalance Status")
             print("{:^22}{:^30}{:^19}".format(budget_total, expense_total, balance))
             print("-" * 70)
-            print("*" * 130)
+            print("*" * 150)
             if balance < -1000:
                 print("WARNING: Your expenses have exceeded your budget by a significant amount. It is crucial that you "
                       "immediately reduce your spending to avoid financial difficulties.")
@@ -532,7 +538,7 @@ class Calculation:
             else:
                 print("GOOD NEWS!!! Your expenses are currently under control. However, keep in mind that unexpected "
                       "expenses can arise, so continue to monitor your spending.")
-            print("*" * 130)
+            print("*" * 150)
 
 
 def main():
