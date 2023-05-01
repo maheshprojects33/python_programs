@@ -22,7 +22,8 @@ def user_menu(email, name):
     5. Edit Your Expenses
     6. View Your Expenses
     7. View Your Balance
-    8. Log Out
+    8. View Your Statement
+    9. Log Out
     """)
 
 
@@ -33,12 +34,11 @@ def about():
 *   'SpendTracker' is a user-friendly application that helps users to easily track their expenses and       *
 *   manage their budget. With 'SpendTracker', you can easily enter your expenses as you make them, and      *
 *   categorize them for easy tracking. Whether you are trying to save money, pay off debt, or simply        *
-*   gain a better understanding of your spending habits, This is the perfect app to help you reach your     * 
+*   gain a better understanding of your spending habits, this is the perfect app to help you reach your     * 
 *   financial goals. With SpendTracker, you can take control of your finances and make informed decisions   *
 *   about your money.                                                                                       *
 *                                                                                                           *""")
     print("* " * 55)
-
 
 
 def go_back_to_menu():
@@ -48,7 +48,6 @@ def go_back_to_menu():
 
 def go_back_to_user_menu():
     input("Press Enter to go back to User Menu")
-
 
 
 class Account:
@@ -64,6 +63,9 @@ class Account:
             return
         if self.password1 != self.password2:
             print("*** ERROR!!! Password Doesn't Matched ***\n")
+            return
+        if len(self.password1) < 4:
+            print("*** INFO!!! Password Must Be At Least of 4 Characters")
             return
 
         try:
@@ -106,12 +108,15 @@ class Account:
             data = json.load(f)
 
         if self.email in data:
-            while True:
+            count = 1
+            while count < 3:
                 if data[self.email]["password"] == self.password1:
                     new_password1 = input("Enter Your New Password: ")
                     new_password2 = input("Confirm Your New Password: ")
                     if new_password1 != new_password2:
                         print("*** ERROR!!! New Password Doesn't Matched, Try Again *** \n")
+                    elif len(new_password1) < 4:
+                        print("*** INFO!!! Password Must Be At Least of 4 Characters")
                     else:
                         with open("accounts.json", 'w') as f:
                             data[self.email]['password'] = new_password1
@@ -120,7 +125,10 @@ class Account:
                             break
                 else:
                     print("*** ERROR!!! Old Password Doesn't Matched, Try Again ***\n")
+                    if count == 2:
+                        print("*** WARNING!!! This Is Your Last Chance To Enter Your Password, Try Carefully ***")
                     self.password1 = input("Enter Your Old Password: ")
+                    count += 1
                     continue
         else:
             print("*** ERROR!!! Email ID Not Found To Reset Your Password ***\n")
@@ -275,10 +283,8 @@ class Calculation:
                 if conformation == "y":
                     data[self.email]["total_budget"].pop(budget_no)
                     print("*** SUCCESS!!! Record Has Been Deleted Successfully ***\n")
-
                 else:
                     print("*** INFO!!! Nothing Has Been Changed ***\n")
-                    go_back_to_user_menu()
 
                 with open("records.json", 'w') as f:
                     json.dump(data, f, indent=4)
@@ -540,6 +546,55 @@ class Calculation:
                       "expenses can arise, so continue to monitor your spending.")
             print("*" * 150)
 
+    def view_statement(self, email, name):
+        try:
+            with open("records.json", 'r') as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            print("*** ERROR!!! File Not Found *** \n")
+            return
+
+        if self.email not in data:
+            print("*** EMPTY_DATA!!! Records Not Found To Show Your Statement ***\n")
+        else:
+            budget_total = 0
+            expense_total = 0
+            budget_count = []
+            expense_count = []
+
+            for amounts in data[self.email]["total_budget"].values():
+                amount = amounts['budget']
+                budget_count.append(amounts)
+                budget_total += amount
+            for amounts in data[self.email]["total_expenses"].values():
+                amount = amounts['expense']
+                expense_count.append(amounts)
+                expense_total += amount
+
+            balance = round(budget_total - expense_total, 2)
+
+            print(f"      *************** STATEMENT OF YOUR ACCOUNT ***************")
+            print(f"Account Holder: {name}\nAccount Email: {email}")
+
+            print("-" * 110)
+            print("{:<20}{:<25}{:<25}{:<30}".format("Particulars", "Budget Amount(Cr.)", "Expense Amount(Dr.)",
+                                                    "Remarks"))
+
+            count = 1
+            for budget in budget_count:
+                print("{:<20}{:<25}{:<25}{:<30}".format(f"Budget_{count}", budget['budget'], "0", budget['remarks']))
+                count += 1
+            print("")
+            count = 1
+            for expense in expense_count:
+                print("{:<20}{:<25}{:<25}{:<30}".format(f"Expense_{count}", "0", expense['expense'],expense['remarks']))
+                count += 1
+            print("-" * 110)
+
+            print("{:<20}{:<25}{:<25}{:<30}".format(f"TOTAL", budget_total, expense_total,
+            f"{'GOOD JOB! You Have Maintained Your balance' if balance > 0 else 'THINK TWICE! Before You Spend'}"))
+            print("{:<20}{:}".format("BALANCE", balance))
+
 
 def main():
     menu()
@@ -594,8 +649,9 @@ def main():
 
                         while True:
                             choice = input(
-                                "\nDo You Want To 'Edit' or 'Delete' The Existing Data ('e' for Edit / 'd' for "
-                                "Delete): ").lower()
+                                "\nDo You Want To 'Edit', 'Delete' or 'Cancel' The Existing Data ('e' for Edit / 'd' "
+                                "for "
+                                "Delete / 'c' for Cancel): ").lower()
                             if choice == "e":
                                 budget_edit.view_budget()
                                 budget_edit.edit_budget()
@@ -604,8 +660,11 @@ def main():
                                 budget_edit.view_budget()
                                 budget_edit.delete_budget()
                                 break
+                            elif choice == "c":
+                                print("*** INFO!!! Action Has Been Canceled, Nothing Changed")
+                                break
                             else:
-                                print("*** ERROR!! Please Enter ('e' for Edit / 'd' for Delete): ")
+                                print("*** ERROR!!! Please Enter ('e' for Edit / 'd' for Delete / 'c' for Cancel): ")
                                 continue
                         go_back_to_user_menu()
                         user_menu(email, name)
@@ -640,8 +699,9 @@ def main():
                         while True:
 
                             choice = input(
-                                "\nDo You Want To 'Edit' or 'Delete' The Existing Data ('e' for Edit / 'd' for "
-                                "Delete): ").lower()
+                                "\nDo You Want To 'Edit', 'Delete' or 'Cancel' The Existing Data ('e' for Edit / 'd' "
+                                "for "
+                                "Delete / 'c' for Cancel): ").lower()
                             if choice == "e":
                                 expense_edit.view_expenses()
                                 expense_edit.edit_expenses()
@@ -650,8 +710,11 @@ def main():
                                 expense_edit.view_expenses()
                                 expense_edit.delete_expenses()
                                 break
+                            elif choice == "c":
+                                print("*** INFO!!! Action Has Been Canceled, Nothing Changed")
+                                break
                             else:
-                                print("*** ERROR!! Please Enter ('e' for Edit / 'd' for Delete): ")
+                                print("*** ERROR!! Please Enter ('e' for Edit / 'd' for Delete / 'c' for Cancel): ")
                                 continue
                         go_back_to_user_menu()
                         user_menu(email, name)
@@ -670,6 +733,13 @@ def main():
                         user_menu(email, name)
                         continue
                     elif menu_choice == "8":
+                        statement_view = Calculation(email)
+                        print(f"------------- Your Current Statement {name} -------------")
+                        statement_view.view_statement(email, name)
+                        go_back_to_user_menu()
+                        user_menu(email, name)
+                        continue
+                    elif menu_choice == "9":
                         print("*** SUCCESS!!! You are Logged Out Successfully. \n")
                         go_back_to_menu()
                         break
@@ -682,7 +752,8 @@ def main():
                         Enter 5 to Edit your Expenses
                         Enter 6 to View your Expenses
                         Enter 7 to View your Balance
-                        Enter 8 to Log Out""")
+                        Enter 8 to View your Statement
+                        Enter 9 to Log Out""")
             else:
                 go_back_to_menu()
         elif menu_choice == "3":
@@ -713,3 +784,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
