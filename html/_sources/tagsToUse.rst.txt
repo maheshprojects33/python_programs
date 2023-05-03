@@ -1,0 +1,89 @@
+.. _hyper:
+
+Tags To Use For Documentation
+=============================
+
+* Main Titles will have equals to sign below the text
+* Sub Titles will have dash sign below the text
+* 'make html' is the command to create a file
+* 'make clean' to clear the cache
+* To change theme go to conf.py file and find 'html_theme' text and enter the name of theme inside '' semicolon
+* To use Thirdparty Theme got to pypi site and search for it
+* Sample link for theme https://pypi.org/search/?q=&o=&c=Framework+%3A%3A+Sphinx+%3A%3A+Theme
+* Used Theme in this documentation is https://pypi.org/project/sphinx-rtd-theme-citus/
+* To use custom theme first
+* import sphinx_rtd_theme
+* html_theme = 'sphinx_rtd_theme'
+* Two dots for commenting the text .. Example
+
+Auto Generate html from py files
+--------------------------------
+* Better create a folder call rst where all rst files got save to align the files
+* Go to conf.py and add import os, import sys, sys.path.insert(0, os.path.abspath('.')), sys.path.append('folderName')
+* Command to create is - sphinx-apidoc -o output(folder_name where you want to output the file) source_file(folder
+* where your project files are stored)
+* Example sphinx-apidoc -o rst SPEND_TRACKER
+
+
+Recommended Characters to use for markers:
+------------------------------------------
+= - ` : . ' " ~ ^ _ * + #
+
+Text Formatting
+---------------
+* two astics to make text **BOLD TEXT**
+* one astic to make text *ITALIC TEXT*
+* add star at the beginning of the text for bullet points
+
+To Insert The Picture
+---------------------
+format: (if you want to give a title for a image then user figure keyword else image)
+properties: some of properties are used below you can check other on web
+
+.. figure:: /images/dragon.png
+   :alt: dragon_image
+   :scale: 40%
+
+   Title For The Image
+
+Inserting Inline Image
+----------------------
+* To insert icon in between text place a text inbetween two '|' lines
+* Example is like this |example| Then define what that example is as below use figure if you need caption
+
+.. |example| image:: /images/dragon.png
+   :scale: 3%
+
+Adding Warning Information texts
+--------------------------------
+* To add warning textbox or other textbox add two dots warnings and dow :
+
+.. warning::
+
+   Warning!!!
+
+.. admonition:: Custom Title
+
+   Text For admonition
+
+..
+
+
+
+
+Adding/Including Separate file in index.rst
+-------------------------------------------
+* Go to index.rst file and below toctree type the name of a file that you want to include without extension
+* Make sure it doesn't need any extension when you type name
+
+Adding & Linking HyperLinks
+---------------------------
+* To add Hpyerlink type (.. _uniqueName:) without bracket at the top of file
+* Add tag before text semicolon ref semicolon `hyperlink<uniqueName>` change semicolon to icon :
+* To add youtube link type dot dot raw:: html give one line break and paste the code
+
+.. raw:: html
+
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/DSIuLnoKLd8?start=616" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+

@@ -1,0 +1,8 @@
+SPEND_TRACKER Documentation
+===========================
+
+.. toctree::
+   :maxdepth: 4
+
+   spend_tracker
+

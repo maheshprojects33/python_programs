@@ -1,0 +1,7 @@
+spend\_tracker module
+=====================
+
+.. automodule:: spend_tracker
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,40 @@
+.. Spend Tracker documentation master file, created by
+   sphinx-quickstart on Mon May  1 15:43:19 2023.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Spend Tracker's documentation!
+=========================================
+
+About SpendTracker
+------------------
+'SpendTracker' is a user-friendly application that helps users to easily track their expenses and manage their budget.
+With 'SpendTracker', you can easily enter your expenses as you make them, and categorize them for easy tracking.
+Whether you are trying to save money, pay off debt, or simply gain a better understanding of your spending habits,
+this is the perfect app to help you reach your financial goals. With SpendTracker, you can take control of your finances
+and make informed decisions about your money.
+:ref:`Open TagsToUse.rst <hyper>`
+
+.. toctree::
+   :maxdepth: 2
+
+   tagsToUse
+   documentation
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: About App Documentation
+
+   rst/modules
+
+
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
