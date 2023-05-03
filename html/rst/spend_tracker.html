@@ -470,23 +470,110 @@ it notifies the user that the password has been reset successful.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.add_expenses">
 <span class="sig-name descname"><span class="pre">add_expenses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expense</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expense_remark</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.add_expenses" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method add_expenses has same logics as add_budget. It takes two parameter expense and expense_remarks.
+To get the value of login user from database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expense</strong> – takes float value from user</p></li>
+<li><p><strong>expense_remark</strong> – takes string from user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>expense amount and remark</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.delete_budget">
 <span class="sig-name descname"><span class="pre">delete_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.delete_budget" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><ol class="arabic simple">
+<li><p>After user selects delete option from edit_budget method, the below code will be executed.</p></li>
+<li><p>First it try to open “records.json” file if file not found it gives an error message to user.</p></li>
+<li><p>If file exists, it will verify for the empty data records and print empty data record message is no data.</p></li>
+<li><p>On record found, count_data empty list will be appended with all the records of user. Which then will be
+use to verify the user selection for S.No.</p></li>
+</ol>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#         try:</span>
+<span class="c1">#             with open(&quot;records.json&quot;, &quot;r&quot;) as f:</span>
+<span class="c1">#                 data = json.load(f)</span>
+<span class="c1">#         except FileNotFoundError:</span>
+<span class="c1">#             print(&quot;*** ERROR!!! File Not Found ***\n&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         if self.email not in data:</span>
+<span class="c1">#             print(&quot;*** EMPTY_DATA!!! Records Not Found To Edit!!! *** \n&quot;)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             count_data = []</span>
+<span class="c1">#             for count in data[self.email][&quot;total_budget&quot;].values():</span>
+<span class="c1">#                 count_data.append(count)</span>
+<span class="c1">#</span>
+<span class="c1">#             # To validate User Input For Delete</span>
+<span class="c1">#             while True:</span>
+<span class="c1">#                 try:</span>
+<span class="c1">#                     delete = int(</span>
+<span class="c1">#                         input(f&quot;Enter respective S.No. to Edit Your Budget (Should be 1 to {len(count_data)}): &quot;))</span>
+<span class="c1">#                     if delete &lt;= 0:</span>
+<span class="c1">#                         print(&quot;*** ERROR!!! Value Should note be less than 1 ***\n&quot;)</span>
+<span class="c1">#                     elif delete &gt; len(count_data):</span>
+<span class="c1">#                         print(f&quot;*** ERROR!!! Record Not Found for Budget S.No. {delete} ***\n&quot;)</span>
+<span class="c1">#                     else:</span>
+<span class="c1">#                         break</span>
+<span class="c1">#                 except ValueError:</span>
+<span class="c1">#                     print(&quot;*** ERROR!!! Enter respective S.No. to Edit Your Budget ***\n&quot;)</span>
+</pre></div>
+</div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Then runs the logic to delete the user requested data.</p></li>
+</ol>
+<div class="toggle docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#             if count_data[delete - 1]:</span>
+<span class="c1">#                 budget_nos = []</span>
+<span class="c1">#                 data_list = data[self.email][&#39;total_budget&#39;].keys()</span>
+<span class="c1">#                 for key in data_list:</span>
+<span class="c1">#                     budget_nos.append(key)</span>
+<span class="c1">#                 budget_no = (budget_nos[delete - 1])</span>
+<span class="c1">#                 amount_to_del = data[self.email][&quot;total_budget&quot;][budget_no][&#39;budget&#39;]</span>
+<span class="c1">#                 remark_to_del = data[self.email][&quot;total_budget&quot;][budget_no][&#39;remarks&#39;]</span>
+<span class="c1">#</span>
+<span class="c1">#                 # Get confirmation from user</span>
+<span class="c1">#                 print(&quot;\nYour Existing Budget: &quot;, amount_to_del)</span>
+<span class="c1">#                 print(&quot;Your Existing Remark: &quot;, remark_to_del)</span>
+<span class="c1">#                 conformation = input(f&quot;Are You Sure You Want To Delete Above Data (y/n): &quot;).lower()</span>
+<span class="c1">#</span>
+<span class="c1">#                 if conformation == &quot;y&quot;:</span>
+<span class="c1">#                     data[self.email][&quot;total_budget&quot;].pop(budget_no)</span>
+<span class="c1">#                     print(&quot;*** SUCCESS!!! Record Has Been Deleted Successfully ***\n&quot;)</span>
+<span class="c1">#                 else:</span>
+<span class="c1">#                     print(&quot;*** INFO!!! Nothing Has Been Changed ***\n&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#                 with open(&quot;records.json&quot;, &#39;w&#39;) as f:</span>
+<span class="c1">#                     json.dump(data, f, indent=4)</span>
+</pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.delete_expenses">
 <span class="sig-name descname"><span class="pre">delete_expenses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.delete_expenses" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method also has same logics as delete_budget(self) method from class Calculation.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.edit_budget">
 <span class="sig-name descname"><span class="pre">edit_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.edit_budget" title="Permalink to this definition"></a></dt>
-<dd><ol class="arabic simple">
-<li><p>This method takes care of all the logics to edit the budget.</p></li>
+<dd><p>1. This method takes care of all the logics to edit the budget. It gives user 3 options edit, delete and
+cancel the operation. If user select delete as a option then it will go to delete_budget(self) method of
+Caclulation Class.</p>
+<ol class="arabic simple" start="2">
 <li><p>From main() function after all the verification the edit_budget method runs.</p></li>
 <li><p>First it opens the “records.json” file and check for the file and data.</p></li>
 <li><p>If file or data not found it gives user and error message.</p></li>
@@ -511,39 +598,172 @@ it notifies the user that the password has been reset successful.</p>
 </div>
 </div>
 <ol class="arabic simple" start="6">
-<li></li>
+<li><p>After it validate the user input for edit, if all data valids it will update the data to database.</p></li>
 </ol>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#             while True:</span>
+<span class="c1">#                 try:</span>
+<span class="c1">#                     edit = int(</span>
+<span class="c1">#                         input(f&quot;Enter respective S.No. to Edit Your Budget (Should be 1 to {len(count_data)}): &quot;))</span>
+<span class="c1">#                     if edit &lt;= 0:</span>
+<span class="c1">#                         print(&quot;*** ERROR!!! Value Should note be less than 1 ***\n&quot;)</span>
+<span class="c1">#                     elif edit &gt; len(count_data):</span>
+<span class="c1">#                         print(f&quot;*** ERROR!!! Record Not Found for Budget S.No. {edit} ***\n&quot;)</span>
+<span class="c1">#                     else:</span>
+<span class="c1">#                         break</span>
+<span class="c1">#                 except ValueError:</span>
+<span class="c1">#                     print(&quot;*** ERROR!!! Enter respective S.No. to Edit Your Budget ***\n&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#             # Logic starts for edit</span>
+<span class="c1">#             if count_data[edit - 1]:</span>
+<span class="c1">#                 budget_nos = []</span>
+<span class="c1">#                 data_list = data[self.email][&#39;total_budget&#39;].keys()</span>
+<span class="c1">#                 for key in data_list:</span>
+<span class="c1">#                     budget_nos.append(key)</span>
+<span class="c1">#                 budget_no = (budget_nos[edit - 1])</span>
+<span class="c1">#</span>
+<span class="c1">#                 old_amount = data[self.email][&quot;total_budget&quot;][budget_no][&#39;budget&#39;]</span>
+<span class="c1">#                 old_remark = data[self.email][&quot;total_budget&quot;][budget_no][&#39;remarks&#39;]</span>
+<span class="c1">#</span>
+<span class="c1">#                 # Getting New Values from User</span>
+<span class="c1">#                 while True:</span>
+<span class="c1">#                     try:</span>
+<span class="c1">#                         print(f&#39;\n*** DATA!!! Your Existing Budget Amount was &quot;{old_amount}&quot; ***&#39;)</span>
+<span class="c1">#                         new_amount = float(input(&quot;Edit Your Budget Amount: &quot;))</span>
+<span class="c1">#                         if new_amount &lt; 0:</span>
+<span class="c1">#                             print(&quot;*** ERROR!!! Amount Must Be Greater Than 0 ***\n&quot;)</span>
+<span class="c1">#                         else:</span>
+<span class="c1">#                             print(f&#39;\n*** DATA!!! Your Existing Budget Remark was &quot;{old_remark}&quot; ***&#39;)</span>
+<span class="c1">#                             new_remark = input(&quot;Edit Your Remarks: &quot;)</span>
+<span class="c1">#                             # Assigning Edited data to dictionary</span>
+<span class="c1">#                             data[self.email][&quot;total_budget&quot;][budget_no][&#39;budget&#39;] = new_amount</span>
+<span class="c1">#                             data[self.email][&quot;total_budget&quot;][budget_no][&#39;remarks&#39;] = new_remark</span>
+<span class="c1">#                             print(&quot;*** SUCCESS!!! Your Data Has Been Successfully Edited ***\n&quot;)</span>
+<span class="c1">#                             break</span>
+<span class="c1">#                     except ValueError:</span>
+<span class="c1">#                         print(&quot;*** ERROR!!! Amount Must Be A Number ***\n&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#                 with open(&quot;records.json&quot;, &#39;w&#39;) as f:</span>
+<span class="c1">#                     json.dump(data, f, indent=4)</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.edit_expenses">
 <span class="sig-name descname"><span class="pre">edit_expenses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.edit_expenses" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method has same logic as edit_budget(self) method. Refer to edit_budget(self) method on Calculation class
+for detail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param<span class="colon">:</span></dt>
+<dd class="field-odd"><p>takes expenses amount and remarks</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>update or delete existing records from database</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.view_balance">
 <span class="sig-name descname"><span class="pre">view_balance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.view_balance" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method has same logics as view_budget and view_expenses.
+This method gives different messages depending on a remaning balance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – to get the logged user’s email id and display in print function</p></li>
+<li><p><strong>name</strong> – to get the logged user’s name and display in print function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>email, name, total budget, total expenses and remaning balance</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.view_budget">
 <span class="sig-name descname"><span class="pre">view_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.view_budget" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><ol class="arabic simple">
+<li><p>After user selects the option to view_budget from user_menu() function, the view_budget(self) method runs.</p></li>
+<li><p>First the method checks if file is exists or not, if no it returns FileNotFoundError</p></li>
+<li><p>If file found, it check whether that data is available or not, if not prints EMPTY_DATA message</p></li>
+<li><p>budget_amount and budget_remark list are initialized to get the data of user using loop function on data</p></li>
+</ol>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#         try:</span>
+<span class="c1">#             with open(&quot;records.json&quot;, &#39;r&#39;) as f:</span>
+<span class="c1">#                 data = json.load(f)</span>
+<span class="c1">#         except FileNotFoundError:</span>
+<span class="c1">#             print(&quot;*** ERROR!!! File Not Found ***\n&quot;)</span>
+<span class="c1">#             return</span>
+<span class="c1">#</span>
+<span class="c1">#         if self.email not in data:</span>
+<span class="c1">#             print(&quot;*** EMPTY_DATA!!! No Records Are Found ***\n&quot;)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#</span>
+<span class="c1">#             budget_amount = []</span>
+<span class="c1">#             budget_remark = []</span>
+<span class="c1">#</span>
+<span class="c1">#             for budgets_no, budget_value in data[self.email][&quot;total_budget&quot;].items():</span>
+<span class="c1">#                 amount = budget_value[&#39;budget&#39;]</span>
+<span class="c1">#                 remark = budget_value[&#39;remarks&#39;]</span>
+<span class="c1">#                 budget_amount.append(amount)</span>
+<span class="c1">#                 budget_remark.append(remark)</span>
+</pre></div>
+</div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>total_budget variable sets to 0 initially to get total of it.</p></li>
+</ol>
+<p>6. Used enumerate function using for loop to display the data to user. ‘i’ is added in loop to get budget
+remarks and to increase s.no. with +1</p>
+<ol class="arabic simple" start="7">
+<li><p>print function has .format so that the data can be display with proper alignment.</p></li>
+</ol>
+<div class="toggle docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># total_budget = 0</span>
+<span class="c1">#   print(&quot;S.No.        Amount          Total_Budget    Remarks&quot;)</span>
+<span class="c1">#   for i, amount in enumerate(budget_amount):</span>
+<span class="c1">#       total_budget += float(amount)</span>
+<span class="c1">#       remark = budget_remark[i]</span>
+<span class="c1">#       print(&quot;{:&lt;8}{:&lt;15}{:&lt;13}{:}&quot;.format(i + 1, amount, round(total_budget, 2), remark))</span>
+</pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>data of user for amount and remarks</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.view_expenses">
 <span class="sig-name descname"><span class="pre">view_expenses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.view_expenses" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method has same logics as view_budget(self) method inside class Calculation.
+For detail refere to view_budget(self) method.
+:return:</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spend_tracker.Calculation.view_statement">
 <span class="sig-name descname"><span class="pre">view_statement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spend_tracker.Calculation.view_statement" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This method has similar logics as view_balance(self) method. Refer to view_balance for detail.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> – to get logged in user’s email id and dispaly in print function</p></li>
+<li><p><strong>name</strong> – to get logged in user’s name and dispaly in print function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>email, name, budget amount and remarks, expense amount and remarks, total and balance</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
